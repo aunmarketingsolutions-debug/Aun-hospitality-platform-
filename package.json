@@ -1,0 +1,22 @@
+{
+  "name": "aun-hospitality-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AUN Marketing Solutions — Hospitality Membership Platform",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && prisma db push --accept-data-loss --skip-generate && next build",
+    "start": "next start",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "bcryptjs": "^2.4.3",
+    "cookie": "^0.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "next": "^14.2.5",
+    "prisma": "^5.20.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
