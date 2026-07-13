@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id              String           @id @default(uuid())
+  name            String
+  location        String
+  cardPrice       Int
+  phone           String           @unique
+  pin             String
+  createdAt       DateTime         @default(now())
+  couponTemplates CouponTemplate[]
+  homeCards       Card[]           @relation("HomeProperty")
+  coupons         Coupon[]
+  redemptions     Redemption[]
+}
+
+model CouponTemplate {
+  id             String   @id @default(uuid())
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  name           String
+  icon           String
+  maxUses        Int
+  valueType      String   @default("simple")
+  worthAmount    Int?
+  minBilling     Int?
+  discountAmount Int?
+  rules          String?  @db.Text
+  createdAt      DateTime @default(now())
+
+  @@index([propertyId])
+}
+
+model Card {
+  id             String   @id @default(uuid())
+  holder         String
+  phone          String   @unique
+  tier           String
+  number         String
+  homePropertyId String
+  homeProperty   Property @relation("HomeProperty", fields: [homePropertyId], references: [id])
+  price          Int
+  validTill      DateTime
+  createdAt      DateTime @default(now())
+  coupons        Coupon[]
+
+  @@index([homePropertyId])
+}
+
+model Coupon {
+  id             String   @id @default(uuid())
+  cardId         String
+  card           Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id])
+  name           String
+  icon           String
+  maxUses        Int
+  used           Int      @default(0)
+  valueType      String   @default("simple")
+  worthAmount    Int?
+  minBilling     Int?
+  discountAmount Int?
+  rules          String?  @db.Text
+  redemptions    Redemption[]
+
+  @@index([cardId])
+  @@index([propertyId])
+}
+
+model Redemption {
+  id         String   @id @default(uuid())
+  couponId   String
+  coupon     Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  customer   String
+  couponName String
+  at         DateTime @default(now())
+
+  @@index([propertyId])
+  @@index([at])
+}
