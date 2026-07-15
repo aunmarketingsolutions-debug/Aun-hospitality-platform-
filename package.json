@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "AUN Marketing Solutions — Hospitality Membership Platform",
-  "{
+  {
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
